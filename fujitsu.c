@@ -536,18 +536,6 @@ ControlProc(DeviceIntPtr device, PtrCtrl *ctrl)
         DBGOUT(2, "ControlProc\n");
 }
 
-
-
-
-void
-CloseProc (InputInfoPtr local)
-{
-        xf86ErrorFVerb(2, "CLOSEPROC\n" );
-}
-
-
-
-
 int
 SwitchMode (ClientPtr client, DeviceIntPtr dev, int mode)
 {
@@ -801,16 +789,11 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
         pInfo->device_control = DeviceControl;
         pInfo->read_input = ReadInput;
         pInfo->control_proc = NULL;
-        pInfo->close_proc = CloseProc;
         pInfo->switch_mode = SwitchMode;
-        pInfo->conversion_proc = ConvertProc;
-        pInfo->reverse_conversion_proc = NULL;
         pInfo->fd = -1;
         pInfo->dev = NULL;
         pInfo->private = priv;
         priv->local = pInfo;
-        pInfo->private_flags = 0;
-        pInfo->conf_idev = dev;
 
         xf86CollectInputOptions(pInfo, default_options);
 
