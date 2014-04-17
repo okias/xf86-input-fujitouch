@@ -82,7 +82,7 @@ static int debug_level = 0;
 #endif
 
 static InputInfoPtr
-FujiPreInit(InputDriverPtr drv, IDevPtr dev, int flags);
+FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags);
 
 _X_EXPORT InputDriverRec FUJITSU = {
         1,
@@ -807,7 +807,7 @@ QueryHardware (InputInfoPtr local)
 
 
 InputInfoPtr
-FujiPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
+FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
 {
         /* InputInfoPtr local; */
         InputInfoPtr local;
