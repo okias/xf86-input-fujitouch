@@ -783,10 +783,8 @@ QueryHardware (InputInfoPtr local)
 
 
 InputInfoPtr
-FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
+FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
 {
-        /* InputInfoPtr local; */
-        InputInfoPtr local;
         FujiPrivatePtr priv;
 
         int i = 0;
@@ -797,34 +795,28 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         if (!priv)
                 return NULL;
 
-        local = xf86AllocateInput(drv, 0);
-        if (!local) {
-                free(priv);
-                return NULL;
-        }
+        pInfo->name = dev->identifier;
+        pInfo->type_name = XI_TOUCHSCREEN;
+        pInfo->device_control = DeviceControl;
+        pInfo->read_input = ReadInput;
+        pInfo->control_proc = NULL;
+        pInfo->close_proc = CloseProc;
+        pInfo->switch_mode = SwitchMode;
+        pInfo->conversion_proc = ConvertProc;
+        pInfo->reverse_conversion_proc = NULL;
+        pInfo->fd = -1;
+        pInfo->dev = NULL;
+        pInfo->private = priv;
+        priv->local = pInfo;
+        pInfo->private_flags = 0;
+        pInfo->conf_idev = dev;
 
-        local->name = dev->identifier;
-        local->type_name = XI_TOUCHSCREEN;
-        local->device_control = DeviceControl;
-        local->read_input = ReadInput;
-        local->control_proc = NULL;
-        local->close_proc = CloseProc;
-        local->switch_mode = SwitchMode;
-        local->conversion_proc = ConvertProc;
-        local->reverse_conversion_proc = NULL;
-        local->fd = -1;
-        local->dev = NULL;
-        local->private = priv;
-        priv->local = local;
-        local->private_flags = 0;
-        local->conf_idev = dev;
+        xf86CollectInputOptions(pInfo, default_options);
 
-        xf86CollectInputOptions(local, default_options);
+        xf86OptionListReport(pInfo->options);
 
-        xf86OptionListReport(local->options);
-
-        local->fd = xf86OpenSerial (local->options);
-        if (local->fd == -1)
+        pInfo->fd = xf86OpenSerial (pInfo->options);
+        if (pInfo->fd == -1)
         {
                 ErrorF ("Fuji driver unable to open device\n");
                 goto SetupProc_fail;
@@ -832,30 +824,30 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         xf86ErrorFVerb( 3, "Device opened successfully\n" );
 
         priv->libtouch = calloc(1, sizeof(LibTouchRec));
-        libtouchInit(priv->libtouch, local);
-        priv->calibrate = xf86SetIntOption(local->options, "Calibrate", 0);
-        priv->min_x = xf86SetIntOption(local->options, "MinX", 0 );
-        priv->max_x = xf86SetIntOption(local->options, "MaxX", FUJI_SCREEN_WIDTH );
-        priv->min_y = xf86SetIntOption(local->options, "MinY", 0 );
-        priv->max_y = xf86SetIntOption(local->options, "MaxY", FUJI_SCREEN_HEIGHT );
-        priv->screen_num    = xf86SetIntOption(local->options, "ScreenNumber", 0 );
-        priv->button_number = xf86SetIntOption(local->options, "ButtonNumber", 2 );
+        libtouchInit(priv->libtouch, pInfo);
+        priv->calibrate = xf86SetIntOption(pInfo->options, "Calibrate", 0);
+        priv->min_x = xf86SetIntOption(pInfo->options, "MinX", 0 );
+        priv->max_x = xf86SetIntOption(pInfo->options, "MaxX", FUJI_SCREEN_WIDTH );
+        priv->min_y = xf86SetIntOption(pInfo->options, "MinY", 0 );
+        priv->max_y = xf86SetIntOption(pInfo->options, "MaxY", FUJI_SCREEN_HEIGHT );
+        priv->screen_num    = xf86SetIntOption(pInfo->options, "ScreenNumber", 0 );
+        priv->button_number = xf86SetIntOption(pInfo->options, "ButtonNumber", 2 );
 
-        debug_level = xf86SetIntOption(local->options, "DebugLevel", 0);
+        debug_level = xf86SetIntOption(pInfo->options, "DebugLevel", 0);
         libtouchSetDebugLevel(debug_level);
 
-        timeo = xf86SetIntOption(local->options, "TapTimer", 90);
+        timeo = xf86SetIntOption(pInfo->options, "TapTimer", 90);
         libtouchSetTapTimeo(priv->libtouch, timeo);
 
-        timeo = xf86SetIntOption(local->options, "LongtouchTimer", 160);
+        timeo = xf86SetIntOption(pInfo->options, "LongtouchTimer", 160);
         libtouchSetLongtouchTimeo(priv->libtouch, timeo);
 
         libtouchSetMoveLimit(priv->libtouch, 
-                             xf86SetIntOption( local->options, 
+                             xf86SetIntOption( pInfo->options,
                                                "MoveLimit", 180 ));
 
         priv->rotate     = FUJI_ROTATE_NONE;
-        s = xf86FindOptionValue(local->options, "Rotate");
+        s = xf86FindOptionValue(pInfo->options, "Rotate");
         if (s) {
                 if (xf86NameCmp(s, "CW") == 0) {
                         priv->rotate = FUJI_ROTATE_CW;                           
@@ -876,18 +868,18 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
                 priv->min_rel_y = priv->min_x;
         }
 
-        priv->swap_y = xf86SetBoolOption(local->options, "SwapY", FALSE);
-        priv->swap_x = xf86SetBoolOption(local->options, "SwapX", FALSE);
+        priv->swap_y = xf86SetBoolOption(pInfo->options, "SwapY", FALSE);
+        priv->swap_x = xf86SetBoolOption(pInfo->options, "SwapX", FALSE);
 
         /* 
            get calibration parameters from XF86Config 
         */
         for (i = 0; i < 9; i++){
                 sprintf(tmp_str, "x%d", i);
-                priv->diff[i][0] = xf86SetIntOption( local->options,
+                priv->diff[i][0] = xf86SetIntOption( pInfo->options,
                                                      tmp_str, 0 );
                 sprintf(tmp_str, "y%d", i);
-                priv->diff[i][1] = xf86SetIntOption( local->options,
+                priv->diff[i][1] = xf86SetIntOption( pInfo->options,
                                                      tmp_str, 0 );
                 DBGOUT(2, "(diff[%d][0]/diff[%d][1])=(%d/%d)\n", i, i, 
                     priv->diff[i][0], priv->diff[i][1]);
@@ -899,18 +891,18 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         priv->cur_y = (priv->max_y - priv->min_y) / 2;
         libtouchSetPos(priv->libtouch, priv->cur_x, priv->cur_y);
 
-        priv->buffer = XisbNew (local->fd, 200);
+        priv->buffer = XisbNew (pInfo->fd, 200);
         priv->packet_type = PACK_UNKNOWN;
 
         DBG (9, XisbTrace (priv->buffer, 1));
 
-        if (QueryHardware(local) != Success)
+        if (QueryHardware(pInfo) != Success)
         {
                 ErrorF ("Unable to query/initialize Fuji hardware.\n");
                 goto SetupProc_fail;
         }
 
-        local->history_size = xf86SetIntOption( local->options, "HistorySize", 0 );
+        pInfo->history_size = xf86SetIntOption( pInfo->options, "HistorySize", 0 );
 
         /* prepare to process touch packets */
         memset(&priv->packet, 0, FUJI_MAX_PACKET_SIZE);
@@ -926,33 +918,33 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         }
 
         /* this results in an xstrdup that must be freed later */
-        local->name = xf86SetStrOption( local->options, "DeviceName", "Fujitsu Serial TouchScreen" );
-        xf86ProcessCommonOptions(local, local->options);
+        pInfo->name = xf86SetStrOption( pInfo->options, "DeviceName", "Fujitsu Serial TouchScreen" );
+        xf86ProcessCommonOptions(pInfo, pInfo->options);
 
-        if (local->fd != -1)
+        if (pInfo->fd != -1)
         { 
                 if (priv->buffer)
                 {
                         XisbFree(priv->buffer);
                         priv->buffer = NULL;
                 }
-                xf86CloseSerial(local->fd);
+                xf86CloseSerial(pInfo->fd);
         }
-        local->fd = -1;
+        pInfo->fd = -1;
 
-        return (local);
+        return (pInfo);
 
  SetupProc_fail:
-        if ((local) && (local->fd))
-                xf86CloseSerial (local->fd);
-        if ((local) && (local->name))
-                free(local->name);
+        if ((pInfo) && (pInfo->fd))
+                xf86CloseSerial (pInfo->fd);
+        if ((pInfo) && (pInfo->name))
+                free(pInfo->name);
 
         if ((priv) && (priv->buffer))
                 XisbFree (priv->buffer);
         if (priv)
                 free(priv);
-        return (local);
+        return (pInfo);
 }
 
 
