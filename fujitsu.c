@@ -1,6 +1,7 @@
 /*
  * Copyright 2004 by Kenan Esau <kenan.esau@conan.de>, Baltmannsweiler, 
  * Germany.
+ * Copyright 2014 by David Heidelberger <david.heidelberger@ixit.cz>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -32,10 +33,6 @@
 #include "xorgVersion.h"
 
 
-#ifndef XFree86LOADER
-#include <unistd.h>
-#include <errno.h>
-#endif
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -44,13 +41,10 @@
 #include "misc.h"
 #include "xf86.h"
 #include "xf86_OSproc.h"
+#include "xf86Module.h"
 #include "xf86Xinput.h"
 #include "exevents.h"
 #include "xisb.h"
-
-#ifdef XFree86LOADER
-#include "xf86Module.h"
-#endif
 
 
 /*****************************************************************************
@@ -231,10 +225,9 @@ DeviceInit (DeviceIntPtr dev)
         InputInfoPtr local = (InputInfoPtr) dev->public.devicePrivate;
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
         unsigned char map[] = {0, 1, 2, 3};
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
-        Atom btn_labels[1] = {0};
-        Atom axis_labels[1] = {0};
-#endif
+
+		Atom btn_labels[1] = {0};
+		Atom axis_labels[1] = {0};
 
    
         /* 
@@ -276,11 +269,7 @@ DeviceInit (DeviceIntPtr dev)
         /* 
          * Device reports button press for 3 buttons.
          */
-        if (InitButtonClassDeviceStruct (dev, 3, 
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
-					btn_labels,
-#endif
-					 map) == FALSE)
+        if (InitButtonClassDeviceStruct (dev, 3, btn_labels, map) == FALSE)
         {
                 ErrorF("Unable to allocate Fuji touchscreen ButtonClassDeviceStruct\n");
                 return !Success;
@@ -296,23 +285,13 @@ DeviceInit (DeviceIntPtr dev)
          * Axes min and max values are reported in raw coordinates.
          */
         if (InitValuatorClassDeviceStruct(dev, 2,
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
-					  axis_labels,
-#endif
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 3
-                                          xf86GetMotionEvents,
-#endif
-                                          local->history_size, Absolute) == FALSE)
+					axis_labels, local->history_size, Absolute) == FALSE)
         {
                 ErrorF ("Unable to allocate Fuji touchscreen ValuatorClassDeviceStruct\n");
                 return !Success;
         }
 
-	InitValuatorAxisStruct(dev, 0,
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
-			       0,
-#endif
-0, priv->screen_width,
+	InitValuatorAxisStruct(dev, 0, 0, 0, priv->screen_width,
 			       FUJI_AXIS_MAX_RES,
 			       FUJI_AXIS_MIN_RES /* min_res */ ,
 			       FUJI_AXIS_MAX_RES /* max_res */ );
@@ -323,10 +302,7 @@ DeviceInit (DeviceIntPtr dev)
          /*                            FUJI_AXIS_MAX_RES /\* max_res *\/ ); */
          /* xf86InitValuatorDefaults(dev, 0); */
 
-	InitValuatorAxisStruct(dev, 1,
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
-			       0,
-#endif
+	InitValuatorAxisStruct(dev, 1, 0,
 			       0, priv->screen_height,
 			       FUJI_AXIS_MAX_RES,
 			       FUJI_AXIS_MIN_RES /* min_res */ ,
