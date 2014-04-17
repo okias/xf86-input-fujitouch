@@ -50,7 +50,7 @@ inputdir=${moduledir}/input
 AC_SUBST(inputdir)
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XORG, [xorg-server >= 1.16.0] xproto $REQUIRED_MODULES)
+PKG_CHECK_MODULES(XORG, [xorg-server >= 1.15.0] xproto $REQUIRED_MODULES)
 
 dnl AC_MSG_RESULT([yes])
 sdkdir=$(pkg-config --variable=sdkdir xorg-server)
