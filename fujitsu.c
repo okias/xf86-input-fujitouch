@@ -75,7 +75,7 @@ static int debug_level = 0;
 #define DBG(lvl, f)
 #endif
 
-static InputInfoPtr
+static int
 FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags);
 
 _X_EXPORT InputDriverRec FUJITSU = {
@@ -772,7 +772,7 @@ QueryHardware (InputInfoPtr local)
 
 
 
-InputInfoPtr
+static int
 FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
 {
         FujiPrivatePtr priv;
@@ -783,7 +783,7 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
         int timeo = 0;
         priv = calloc (1, sizeof(FujiPrivateRec));
         if (!priv)
-                return NULL;
+                return 123;
 
         pInfo->type_name = XI_TOUCHSCREEN;
         pInfo->device_control = DeviceControl;
@@ -914,7 +914,7 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
         }
         pInfo->fd = -1;
 
-        return (pInfo);
+        return 0;
 
  SetupProc_fail:
         if ((pInfo) && (pInfo->fd))
@@ -926,7 +926,7 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
                 XisbFree (priv->buffer);
         if (priv)
                 free(priv);
-        return (pInfo);
+        return 1;
 }
 
 
