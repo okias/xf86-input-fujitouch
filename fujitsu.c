@@ -817,7 +817,6 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         local->private = priv;
         priv->local = local;
         local->private_flags = 0;
-        local->flags = XI86_POINTER_CAPABLE | XI86_SEND_DRAG_EVENTS;
         local->conf_idev = dev;
 
         xf86CollectInputOptions(local, default_options);
