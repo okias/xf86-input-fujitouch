@@ -1,0 +1,36 @@
+V0.6.5
+  - Remove compile warning with Xorg 7.2 (Danny Kukawa)
+  - Fixed segv when switching to VT
+
+V0.6.4
+  - Made driver work with Xorg 7.2
+  - Added RandR-support
+  - Merged current libtouch from EVTouch-project
+
+V0.6.3
+  - Added script "stylus" to the tarballs
+  - Changed default-value of "MoveLimit" to 180 (like already
+    mentioned in the docs)
+
+V0.6.2:
+  - Changed default-timer-values
+  - Removed obsolete Oneandahalftap-Timer-variables
+
+V0.6.1:
+  - Minor bug-fixes and internal changes
+  - Changed behaviour
+    - Longtouch does a Left Mousebutton down
+    - OneAndAHalvclick does a Right Mousebutton down
+
+V0.6:
+  - Pointer is now set correctly after switching to console and back
+  - Disabled debugging-output in distribution-tarball
+
+V0.5:
+  - Set default timer-values to more sane values
+  - Full integration with libtouch
+    (all kinds of click-events work)
+
+V0.1:
+  - First initialization works
+  - Mouse pointer moves correctly under the pen
