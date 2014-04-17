@@ -21,7 +21,7 @@
 # Process this file with autoconf to produce a configure script
 
 AC_PREREQ(2.59)
-AC_INIT([xf86-input-fujitouch],0.6.7,[http://www.conan.de/touchscreen/p-series.html],[xf86-input-fujitouch])
+AC_INIT([xf86-input-fujitouch],0.7.0,[https://github.com/okias/xf86-input-fujitouch],[xf86-input-fujitouch])
 
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR(.)
