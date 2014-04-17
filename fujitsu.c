@@ -480,10 +480,6 @@ static void FujiHandleCoordinate(InputInfoPtr local)
         DBGOUT( 2, "setting (x/y)=(%d/%d)\n", 
                 priv->cur_x, priv->cur_y);
 
-        xf86XInputSetScreen(local, priv->screen_num, 
-                            priv->cur_x, 
-                            priv->cur_y);
-                
         xf86PostProximityEvent(local->dev, 1, 0, 2, 
                                priv->cur_x, 
                                priv->cur_y);
