@@ -953,7 +953,6 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         /* this results in an xstrdup that must be freed later */
         local->name = xf86SetStrOption( local->options, "DeviceName", "Fujitsu Serial TouchScreen" );
         xf86ProcessCommonOptions(local, local->options);
-        local->flags |= XI86_CONFIGURED;
 
         if (local->fd != -1)
         { 
