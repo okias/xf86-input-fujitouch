@@ -285,7 +285,7 @@ DeviceInit (DeviceIntPtr dev)
          * Axes min and max values are reported in raw coordinates.
          */
         if (InitValuatorClassDeviceStruct(dev, 2,
-					axis_labels, local->history_size, Absolute) == FALSE)
+					axis_labels, GetMotionHistorySize(), Absolute) == FALSE)
         {
                 ErrorF ("Unable to allocate Fuji touchscreen ValuatorClassDeviceStruct\n");
                 return !Success;
@@ -901,8 +901,6 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
                 ErrorF ("Unable to query/initialize Fuji hardware.\n");
                 goto SetupProc_fail;
         }
-
-        pInfo->history_size = xf86SetIntOption( pInfo->options, "HistorySize", 0 );
 
         /* prepare to process touch packets */
         memset(&priv->packet, 0, FUJI_MAX_PACKET_SIZE);
