@@ -5,3 +5,7 @@ config.log
 config.status
 libtool
 stamp-h1
+.libs/
+fujitsu_drv.la
+fujitsu_drv_la-fujitsu.lo
+fujitsu_drv_la-libtouch.lo
