@@ -817,13 +817,13 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         char *s;
         char tmp_str[8];
         int timeo = 0;
-        priv = xcalloc (1, sizeof(FujiPrivateRec));
+        priv = calloc (1, sizeof(FujiPrivateRec));
         if (!priv)
                 return NULL;
 
         local = xf86AllocateInput(drv, 0);
         if (!local) {
-                xfree(priv);
+                free(priv);
                 return NULL;
         }
 
@@ -856,7 +856,7 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         }
         xf86ErrorFVerb( 3, "Device opened successfully\n" );
 
-        priv->libtouch = xcalloc(1, sizeof(LibTouchRec));
+        priv->libtouch = calloc(1, sizeof(LibTouchRec));
         libtouchInit(priv->libtouch, local);
         priv->calibrate = xf86SetIntOption(local->options, "Calibrate", 0);
         priv->min_x = xf86SetIntOption(local->options, "MinX", 0 );
@@ -972,12 +972,12 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr dev, int flags)
         if ((local) && (local->fd))
                 xf86CloseSerial (local->fd);
         if ((local) && (local->name))
-                xfree (local->name);
+                free(local->name);
 
         if ((priv) && (priv->buffer))
                 XisbFree (priv->buffer);
         if (priv)
-                xfree (priv);
+                free(priv);
         return (local);
 }
 
