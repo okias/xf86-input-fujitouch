@@ -177,7 +177,7 @@ void libtouchSetMoveLimit(LibTouchRecPtr libtouch, int move_limit)
 }
 
 
-void libtouchInit(LibTouchRecPtr libtouch, LocalDevicePtr local)
+void libtouchInit(LibTouchRecPtr libtouch, InputInfoPtr local)
 {
         int state_action_idx = 0;
         int state_button_idx = 0;

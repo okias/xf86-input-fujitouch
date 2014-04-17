@@ -149,7 +149,7 @@ static const char *default_options[] =
 static void
 ControlProc(DeviceIntPtr device, PtrCtrl *ctrl);
 static Bool
-FujiInitHW(LocalDevicePtr local);
+FujiInitHW(InputInfoPtr local);
 
 
 /*****************************************************************************
@@ -160,7 +160,7 @@ FujiInitHW(LocalDevicePtr local);
 static Bool
 DeviceOn (DeviceIntPtr dev)
 {
-        LocalDevicePtr local = (LocalDevicePtr) dev->public.devicePrivate;
+        InputInfoPtr local = (InputInfoPtr) dev->public.devicePrivate;
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
         
         local->fd = xf86OpenSerial(local->options);
@@ -196,7 +196,7 @@ DeviceOn (DeviceIntPtr dev)
 static Bool
 DeviceOff (DeviceIntPtr dev)
 {
-        LocalDevicePtr local = (LocalDevicePtr) dev->public.devicePrivate;
+        InputInfoPtr local = (InputInfoPtr) dev->public.devicePrivate;
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
 
         DBGOUT(2, "Device OFF\n");
@@ -228,7 +228,7 @@ DeviceOff (DeviceIntPtr dev)
 static Bool
 DeviceInit (DeviceIntPtr dev)
 {
-        LocalDevicePtr local = (LocalDevicePtr) dev->public.devicePrivate;
+        InputInfoPtr local = (InputInfoPtr) dev->public.devicePrivate;
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
         unsigned char map[] = {0, 1, 2, 3};
 #if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 7
@@ -477,7 +477,7 @@ FujiGetPacket(FujiPrivatePtr priv)
 
 
 
-static void FujiHandleCoordinate(LocalDevicePtr local)
+static void FujiHandleCoordinate(InputInfoPtr local)
 {
         FujiPrivatePtr priv = (FujiPrivatePtr)local->private;
 	int v0 = 0;
@@ -525,7 +525,7 @@ static void FujiHandleCoordinate(LocalDevicePtr local)
 
 
 
-static void ReadInput (LocalDevicePtr local)
+static void ReadInput (InputInfoPtr local)
 {
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
         CARD32 now;
@@ -562,7 +562,7 @@ ControlProc(DeviceIntPtr device, PtrCtrl *ctrl)
 
 
 void
-CloseProc (LocalDevicePtr local)
+CloseProc (InputInfoPtr local)
 {
         xf86ErrorFVerb(2, "CLOSEPROC\n" );
 }
@@ -580,7 +580,7 @@ SwitchMode (ClientPtr client, DeviceIntPtr dev, int mode)
 
 
 Bool
-ConvertProc(LocalDevicePtr local,
+ConvertProc(InputInfoPtr local,
             int first,
             int num,
             int v0,
@@ -796,7 +796,7 @@ ConvertProc(LocalDevicePtr local,
 
 
 Bool
-QueryHardware (LocalDevicePtr local)
+QueryHardware (InputInfoPtr local)
 {
         xf86ErrorFVerb(2, "QUERY HARDWARE\n" );
 
@@ -809,7 +809,7 @@ QueryHardware (LocalDevicePtr local)
 InputInfoPtr
 FujiPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
 {
-        /* LocalDevicePtr local; */
+        /* InputInfoPtr local; */
         InputInfoPtr local;
         FujiPrivatePtr priv;
 
@@ -984,7 +984,7 @@ FujiPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
 
 
 Bool
-FujiInitHW(LocalDevicePtr local)
+FujiInitHW(InputInfoPtr local)
 {
         FujiPrivatePtr priv = (FujiPrivatePtr) local->private;
         unsigned char cmd;

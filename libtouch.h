@@ -47,7 +47,7 @@ typedef struct _libtouch {
 
         CARD32 past;
         CARD32 now;
-        LocalDevicePtr local;
+        InputInfoPtr local;
 } LibTouchRec, *LibTouchRecPtr;
 
 void libtouchSetDebugLevel(int level);
@@ -57,7 +57,7 @@ void libtouchSetOneandahalftapTimeo(LibTouchRecPtr libtouch, int timeo);
 void libtouchSetTime(LibTouchRecPtr libtouch, CARD32 now);
 void libtouchSetMoveLimit(LibTouchRecPtr libtouch, int move_limit);
 
-void libtouchInit(LibTouchRecPtr libtouch, LocalDevicePtr local);
+void libtouchInit(LibTouchRecPtr libtouch, InputInfoPtr local);
 
 void libtouchSetPos(LibTouchRecPtr libtouch, int x, int y);
 void libtouchTriggerSM(LibTouchRecPtr libtouch, LibTouchState_t touch);

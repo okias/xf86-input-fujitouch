@@ -103,7 +103,7 @@ typedef struct _FujiPrivateRec
         unsigned char packet[FUJI_MAX_PACKET_SIZE]; /* packet being/just read */
 
         LibTouchRecPtr libtouch;
-        LocalDevicePtr local;
+        InputInfoPtr local;
 } FujiPrivateRec, *FujiPrivatePtr;
 
 /* 
