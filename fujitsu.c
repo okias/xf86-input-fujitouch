@@ -293,8 +293,9 @@ DeviceInit (DeviceIntPtr dev)
 
 	InitValuatorAxisStruct(dev, 0, 0, 0, priv->screen_width,
 			       FUJI_AXIS_MAX_RES,
-			       FUJI_AXIS_MIN_RES /* min_res */ ,
-			       FUJI_AXIS_MAX_RES /* max_res */ );
+			       FUJI_AXIS_MIN_RES /* min_res */,
+			       FUJI_AXIS_MAX_RES /* max_res */,
+				   Absolute);
 
          /* xf86InitValuatorAxisStruct(dev, 0, 0, priv->screen_width, */
          /*                            FUJI_AXIS_MAX_RES, */
@@ -305,8 +306,9 @@ DeviceInit (DeviceIntPtr dev)
 	InitValuatorAxisStruct(dev, 1, 0,
 			       0, priv->screen_height,
 			       FUJI_AXIS_MAX_RES,
-			       FUJI_AXIS_MIN_RES /* min_res */ ,
-			       FUJI_AXIS_MAX_RES /* max_res */ );
+			       FUJI_AXIS_MIN_RES /* min_res */,
+			       FUJI_AXIS_MAX_RES /* max_res */,
+				   Absolute);
 
          
          /* xf86InitValuatorAxisStruct(dev, 1, 0, priv->screen_height, */
@@ -795,7 +797,6 @@ FujiPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
         if (!priv)
                 return NULL;
 
-        pInfo->name = dev->identifier;
         pInfo->type_name = XI_TOUCHSCREEN;
         pInfo->device_control = DeviceControl;
         pInfo->read_input = ReadInput;
