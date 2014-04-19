@@ -701,9 +701,9 @@ MAKEFLAGS=
 # Identity of this package.
 PACKAGE_NAME='xf86-input-fujitouch'
 PACKAGE_TARNAME='xf86-input-fujitouch'
-PACKAGE_VERSION='0.6.7'
-PACKAGE_STRING='xf86-input-fujitouch 0.6.7'
-PACKAGE_BUGREPORT='http://www.conan.de/touchscreen/p-series.html'
+PACKAGE_VERSION='0.7.1'
+PACKAGE_STRING='xf86-input-fujitouch 0.7.1'
+PACKAGE_BUGREPORT='https://github.com/okias/xf86-input-fujitouch'
 PACKAGE_URL=''
 
 ac_unique_file="Makefile.am"
