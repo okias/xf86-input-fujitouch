@@ -1,3 +1,4 @@
+*.plist
 .deps/
 Makefile
 config.h

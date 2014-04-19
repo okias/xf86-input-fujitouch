@@ -502,7 +502,6 @@ static void FujiHandleCoordinate(InputInfoPtr local)
 static void ReadInput (InputInfoPtr local)
 {
         FujiPrivatePtr priv = (FujiPrivatePtr) (local->private);
-        CARD32 now;
 
         /* 
          * set blocking to -1 on the first call because we know there is data to
@@ -513,7 +512,6 @@ static void ReadInput (InputInfoPtr local)
         XisbBlockDuration (priv->buffer, -1);
         FujiGetPacket(priv);
 
-        now = GetTimeInMillis();
         if (priv->packet_type & PACK_COORDINATE) {
                 FujiHandleCoordinate(local);
                 if (priv->packet_type & PACK_UNTOUCH)
